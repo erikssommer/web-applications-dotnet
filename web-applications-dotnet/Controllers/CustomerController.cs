@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using web_applications_dotnet.Models;
 
 namespace web_applications_dotnet.Controllers
@@ -10,18 +12,36 @@ namespace web_applications_dotnet.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly CustomerContext _db;
-        
+
         public CustomerController(CustomerContext db)
         {
             _db = db;
         }
 
-        public bool Save(Customer customer)
+        public async Task<bool> Save(Customer customer)
         {
             try
             {
-                _db.Customer.Add(customer);
-                _db.SaveChanges();
+                var newCustomerRow = new Customers();
+                newCustomerRow.FirstName = customer.FirstName;
+                newCustomerRow.LastName = newCustomerRow.LastName;
+                newCustomerRow.Address = newCustomerRow.Address;
+
+                var testPostnr = await _db.PostOffices.FindAsync(customer.Postnr);
+                if (testPostnr == null)
+                {
+                    var postOfficeRow = new PostOffices();
+                    postOfficeRow.Postnr = customer.Postnr;
+                    postOfficeRow.PostOffice = customer.PostOffice;
+                    newCustomerRow.PostOffice = postOfficeRow;
+                }
+                else
+                {
+                    newCustomerRow.PostOffice = testPostnr;
+                }
+
+                _db.Customers.Add(newCustomerRow);
+                await _db.SaveChangesAsync();
                 return true;
             }
             catch
@@ -29,12 +49,21 @@ namespace web_applications_dotnet.Controllers
                 return false;
             }
         }
-        
-        public List<Customer> GetAll()
+
+        public async Task<List<Customer>> GetAll()
         {
             try
             {
-                return _db.Customer.ToList();
+                List<Customer> allCustomers = await _db.Customers.Select(k => new Customer
+                {
+                    Id = k.Id,
+                    FirstName = k.FirstName,
+                    LastName = k.LastName,
+                    Address = k.Address,
+                    Postnr = k.PostOffice.Postnr,
+                    PostOffice = k.PostOffice.PostOffice
+                }).ToListAsync();
+                return allCustomers;
             }
             catch
             {
@@ -42,11 +71,21 @@ namespace web_applications_dotnet.Controllers
             }
         }
 
-        public Customer GetOne(int id)
+        public async Task<Customer> GetOne(int id)
         {
             try
             {
-                return _db.Customer.Find(id);
+                Customers customer = await _db.Customers.FindAsync(id);
+                var dbCustomer = new Customer()
+                {
+                    Id = customer.Id,
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    Address = customer.Address,
+                    Postnr = customer.PostOffice.Postnr,
+                    PostOffice = customer.PostOffice.PostOffice
+                };
+                return dbCustomer;
             }
             catch
             {
@@ -54,13 +93,13 @@ namespace web_applications_dotnet.Controllers
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             try
             {
-                Customer customer = _db.Customer.Find(id);
-                _db.Customer.Remove(customer);
-                _db.SaveChanges();
+                Customers customer = await _db.Customers.FindAsync(id);
+                _db.Customers.Remove(customer);
+                await _db.SaveChangesAsync();
                 return true;
             }
             catch
@@ -69,20 +108,37 @@ namespace web_applications_dotnet.Controllers
             }
         }
 
-        public bool Update(Customer customer)
+        public async Task<bool> Update(Customer customer)
         {
             try
             {
-                Customer c = _db.Customer.Find(customer.Id);
-                c.Name = customer.Name;
-                c.Address = customer.Address;
-                _db.SaveChanges();
-                return true;
+                var updateObject = await _db.Customers.FindAsync(customer.Id);
+                if (updateObject.PostOffice.Postnr != customer.Postnr)
+                {
+                    var testPostnr = _db.PostOffices.Find(customer.Postnr);
+                    if (testPostnr == null)
+                    {
+                        var postOfficeRow = new PostOffices();
+                        postOfficeRow.Postnr = customer.Postnr;
+                        postOfficeRow.PostOffice = customer.PostOffice;
+                        updateObject.PostOffice = postOfficeRow;
+                    }
+                    else
+                    {
+                        updateObject.PostOffice.Postnr = customer.Postnr;
+                    }
+                }
+                updateObject.FirstName = customer.FirstName;
+                updateObject.LastName = customer.LastName;
+                updateObject.Address = customer.Address;
+                await _db.SaveChangesAsync();
             }
             catch
             {
                 return false;
             }
+
+            return true;
         }
     }
 }
