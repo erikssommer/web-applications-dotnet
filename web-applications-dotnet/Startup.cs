@@ -20,6 +20,7 @@ namespace web_applications_dotnet
         {
             services.AddControllers();
             services.AddDbContext<CustomerContext>(options => options.UseSqlite("Data source=Customer.db"));
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
