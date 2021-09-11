@@ -14,7 +14,7 @@ namespace web_applications_dotnet.Models
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
-                var postOffice1 = new PostOffices { Postnr = "0270", PostOffice = "Oslo" };
+                var postOffice1 = new PostOffices { Postnr = "0260", PostOffice = "Oslo" };
                 var postOffice2 = new PostOffices { Postnr = "1370", PostOffice = "Asker" };
 
                 var customer1 = new Customers

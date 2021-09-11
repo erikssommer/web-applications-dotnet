@@ -12,7 +12,7 @@ namespace web_applications_dotnet.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
-        public PostOffices PostOffice { get; set; }
+        virtual public PostOffices PostOffice { get; set; }
     }
 
     public class PostOffices
@@ -20,7 +20,7 @@ namespace web_applications_dotnet.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Postnr { get; set; }
-        public String PostOffice { get; set; }
+        public string PostOffice { get; set; }
         
         virtual public List<Customers> Customers { get; set; }
     }

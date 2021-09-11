@@ -24,8 +24,8 @@ namespace web_applications_dotnet.Controllers
             {
                 var newCustomerRow = new Customers();
                 newCustomerRow.FirstName = customer.FirstName;
-                newCustomerRow.LastName = newCustomerRow.LastName;
-                newCustomerRow.Address = newCustomerRow.Address;
+                newCustomerRow.LastName = customer.LastName;
+                newCustomerRow.Address = customer.Address;
 
                 var testPostnr = await _db.PostOffices.FindAsync(customer.Postnr);
                 if (testPostnr == null)
@@ -128,6 +128,7 @@ namespace web_applications_dotnet.Controllers
                         updateObject.PostOffice.Postnr = customer.Postnr;
                     }
                 }
+
                 updateObject.FirstName = customer.FirstName;
                 updateObject.LastName = customer.LastName;
                 updateObject.Address = customer.Address;

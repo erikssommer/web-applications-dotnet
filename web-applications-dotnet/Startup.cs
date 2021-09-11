@@ -28,6 +28,7 @@ namespace web_applications_dotnet
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                DBInit.Initialize(app);
             }
 
             app.UseRouting();
