@@ -1,24 +1,27 @@
-﻿$(function(){
+﻿$(function () {
     hentAlleKunder();
 });
 
 function hentAlleKunder() {
-    $.get("Customer/GetAll", function (kunder) {
-        formaterKunder(kunder);
+    $.get("Customer/GetAll", function (customers) {
+        formaterKunder(customers);
     });
 }
 
-function formaterKunder(kunder) {
+function formaterKunder(customers) {
     let ut = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Navn</th><th>Adresse</th><th></th><th></th>" +
+        "<th>Fornavn</th><th>Etternavn</th><th>Adresse</th><th>Postnr</th><th>Poststed</th><th></th><th></th>" +
         "</tr>";
-    for (let kunde of kunder) {
-        ut += "<tr>" + 
-            "<td>" + kunde.name + "</td>" +
-            "<td>" + kunde.address + "</td>" +
-            "<td> <a class='btn btn-primary' href='endre.html?id="+kunde.id+"'>Endre</a></td>"+
-            "<td> <button class='btn btn-danger' onclick='slettKunde("+kunde.id+")'>Slett</button></td>"+
+    for (let customer of customers) {
+        ut += "<tr>" +
+            "<td>" + customer.firstName + "</td>" +
+            "<td>" + customer.lastName + "</td>" +
+            "<td>" + customer.address + "</td>" +
+            "<td>" + customer.postnr + "</td>" +
+            "<td>" + customer.postOffice + "</td>" +
+            "<td> <a class='btn btn-primary' href='endre.html?id=" + customer.id + "'>Endre</a></td>" +
+            "<td> <button class='btn btn-danger' onclick='slettKunde(" + customer.id + ")'>Slett</button></td>" +
             "</tr>";
     }
     ut += "</table>";
@@ -26,14 +29,13 @@ function formaterKunder(kunder) {
 }
 
 function slettKunde(id) {
-    const url = "Customer/Delete?id="+id;
-    $.get(url, function (OK) {
+
+    $.get("Customer/Delete?id=" + id, OK => {
         if (OK) {
             window.location.href = 'index.html';
-        }
-        else {
+        } else {
             $("#feil").html("Feil i db - prøv igjen senere");
         }
 
     });
-};
+}

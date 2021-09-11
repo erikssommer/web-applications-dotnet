@@ -1,14 +1,16 @@
 ﻿function lagreKunde() {
-    const kunde = {
-        name: $("#navn").val(),
-        address: $("#adresse").val()
+    const customer = {
+        firstName: $("#fornavn").val(),
+        lastName: $("#etternavn").val(),
+        address: $("#adresse").val(),
+        postnr: $("#postnr").val(),
+        postOffice: $("#poststed").val()
     }
-    const url = "Customer/Save";
-    $.post(url, kunde, function (OK) {
+
+    $.post("Customer/Save", customer, OK => {
         if (OK) {
             window.location.href = 'index.html';
-        }
-        else {
+        } else {
             $("#feil").html("Feil i db - prøv igjen senere");
         }
     });
