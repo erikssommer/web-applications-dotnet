@@ -22,30 +22,63 @@ namespace web_applications_dotnet.Controllers
             _log = log;
         }
         
-        public async Task<bool> Save(Customer customer)
+        public async Task<ActionResult> Save(Customer customer)
         {
-            return await _db.Save(customer);
+            bool ret = await _db.Save(customer);
+
+            if (!ret)
+            {
+                _log.LogInformation("Customer was not saved");
+                return BadRequest("Customer was not saved");
+            }
+
+            return Ok("Customer saved");
+            
         }
 
-        public async Task<List<Customer>> GetAll()
+        public async Task<ActionResult> GetAll()
         {
-            _log.LogInformation("Log message from GetAll method");
-            return await _db.GetAll();
+            List<Customer> list = await _db.GetAll();
+            return Ok(list);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return await _db.Delete(id);
+            bool ret = await _db.Delete(id);
+
+            if (!ret)
+            {
+                _log.LogInformation("Customer was not deleted");
+                return NotFound("Customer was not deleted");
+            }
+
+            return Ok("Customer deleted");
         }
 
-        public async Task<Customer> GetOne(int id)
+        public async Task<ActionResult> GetOne(int id)
         {
-            return await _db.GetOne(id);
+            Customer customer = await _db.GetOne(id);
+
+            if (customer == null)
+            {
+                _log.LogInformation("Customer was not found");
+                return NotFound("Customer was not found");
+            }
+
+            return Ok("Customer found");
         }
 
-        public async Task<bool> Update(Customer customer)
+        public async Task<ActionResult> Update(Customer customer)
         {
-            return await _db.Update(customer);
+            bool ret = await _db.Update(customer);
+
+            if (!ret)
+            {
+                _log.LogInformation("Customer was not found");
+                return NotFound("Customer was not found");
+            }
+
+            return Ok("Customer updated");
         }
     }
 }
