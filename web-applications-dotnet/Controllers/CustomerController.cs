@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using web_applications_dotnet.Models;
 
 namespace web_applications_dotnet.Controllers
@@ -13,9 +14,12 @@ namespace web_applications_dotnet.Controllers
     {
         private readonly ICustomerRepository _db;
 
-        public CustomerController(ICustomerRepository db)
+        private ILogger<CustomerController> _log;
+
+        public CustomerController(ICustomerRepository db, ILogger<CustomerController> log)
         {
             _db = db;
+            _log = log;
         }
         
         public async Task<bool> Save(Customer customer)
@@ -25,6 +29,7 @@ namespace web_applications_dotnet.Controllers
 
         public async Task<List<Customer>> GetAll()
         {
+            _log.LogInformation("Log message from GetAll method");
             return await _db.GetAll();
         }
 
