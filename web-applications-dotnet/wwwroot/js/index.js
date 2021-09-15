@@ -5,7 +5,7 @@
 function hentAlleKunder() {
     $.get("Customer/GetAll", function (customers) {
         formaterKunder(customers);
-    });
+    }).fail(() => $("#feil").html("Feil på server"));
 }
 
 function formaterKunder(customers) {
@@ -30,12 +30,7 @@ function formaterKunder(customers) {
 
 function slettKunde(id) {
 
-    $.get("Customer/Delete?id=" + id, OK => {
-        if (OK) {
-            window.location.href = 'index.html';
-        } else {
-            $("#feil").html("Feil i db - prøv igjen senere");
-        }
-
-    });
+    $.get("Customer/Delete?id=" + id, () => {
+        window.location.href = 'index.html';
+    }).fail(() => $("#feil").html("Feil på server"));
 }

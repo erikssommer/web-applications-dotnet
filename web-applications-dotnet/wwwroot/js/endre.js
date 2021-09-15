@@ -9,7 +9,7 @@
         $("#adresse").val(customer.address);
         $("#postnr").val(customer.postnr);
         $("#poststed").val(customer.postOffice);
-    });
+    }).fail(() => $("#feil").html("Feil på server"));
 });
 
 function endreKunde() {
@@ -21,11 +21,7 @@ function endreKunde() {
         postnr: $("#postnr").val(),
         postOffice: $("#poststed").val()
     };
-    $.post("Customer/Update", customer, OK => {
-        if (OK) {
-            window.location.href = 'index.html';
-        } else {
-            $("#feil").html("Feil i db - prøv igjen senere");
-        }
-    });
+    $.post("Customer/Update", customer => {
+        window.location.href = 'index.html';
+    }).fail(() => $("#fail").html("Feil på server"));
 }

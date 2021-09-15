@@ -7,11 +7,7 @@
         postOffice: $("#poststed").val()
     }
 
-    $.post("Customer/Save", customer, OK => {
-        if (OK) {
-            window.location.href = 'index.html';
-        } else {
-            $("#feil").html("Feil i db - prøv igjen senere");
-        }
-    });
+    $.post("Customer/Save", customer => {
+        window.location.href = 'index.html';
+    }).fail(() => $("#feil").html("Feil på server"));
 }
