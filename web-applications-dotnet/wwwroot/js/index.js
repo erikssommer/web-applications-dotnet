@@ -3,7 +3,7 @@
 });
 
 function hentAlleKunder() {
-    $.get("Customer/GetAll", function (customers) {
+    $.get("Customer/GetAll", customers => {
         formaterKunder(customers);
     }).fail(() => $("#feil").html("Feil på server"));
 }

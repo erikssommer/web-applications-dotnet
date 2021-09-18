@@ -1,8 +1,9 @@
-﻿$(function () {
+﻿$(() => {
     // hent kunden med kunde-id fra url og vis denne i skjemaet
 
     const id = window.location.search.substring(1);
     $.get("Customer/GetOne?" + id, customer => {
+        console.log(customer.lastName)
         $("#id").val(customer.id); // må ha med id inn skjemaet, hidden i html
         $("#fornavn").val(customer.firstName);
         $("#etternavn").val(customer.lastName);
@@ -11,6 +12,17 @@
         $("#poststed").val(customer.postOffice);
     }).fail(() => $("#feil").html("Feil på server"));
 });
+
+function validerOgEndreKunde() {
+    const fornavnOK = validerFornavn($("#fornavn").val());
+    const etternavnOK = validerEtternavn($("#etternavn").val());
+    const adresseOK = validerAdresse($("#adresse").val());
+    const postnrOK = validerPostnr($("#postnr").val());
+    const poststedOK = validerPoststed($("#poststed").val());
+    if (fornavnOK && etternavnOK && adresseOK && postnrOK && poststedOK) {
+        endreKunde();
+    }
+}
 
 function endreKunde() {
     const customer = {
@@ -21,7 +33,7 @@ function endreKunde() {
         postnr: $("#postnr").val(),
         postOffice: $("#poststed").val()
     };
-    $.post("Customer/Update", customer => {
+    $.post("Customer/Update", customer, () => {
         window.location.href = 'index.html';
     }).fail(() => $("#fail").html("Feil på server"));
 }
