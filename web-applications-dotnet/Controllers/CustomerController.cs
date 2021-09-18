@@ -24,16 +24,21 @@ namespace web_applications_dotnet.Controllers
         
         public async Task<ActionResult> Save(Customer customer)
         {
-            bool ret = await _db.Save(customer);
-
-            if (!ret)
+            if (ModelState.IsValid)
             {
-                _log.LogInformation("Customer was not saved");
-                return BadRequest("Customer was not saved");
-            }
+                bool ret = await _db.Save(customer);
 
-            return Ok("Customer saved");
-            
+                if (!ret)
+                {
+                    _log.LogInformation("Customer was not saved");
+                    return BadRequest("Customer was not saved");
+                }
+
+                return Ok("Customer saved");
+            }
+            _log.LogInformation("Input validation failed");
+            return BadRequest("Input validation failed");
+
         }
 
         public async Task<ActionResult> GetAll()
@@ -70,15 +75,20 @@ namespace web_applications_dotnet.Controllers
 
         public async Task<ActionResult> Update(Customer customer)
         {
-            bool ret = await _db.Update(customer);
-
-            if (!ret)
+            if (ModelState.IsValid)
             {
-                _log.LogInformation("Customer was not found");
-                return NotFound("Customer was not found");
-            }
+                bool ret = await _db.Update(customer);
 
-            return Ok("Customer updated");
+                if (!ret)
+                {
+                    _log.LogInformation("Customer was not found");
+                    return NotFound("Customer was not found");
+                }
+
+                return Ok("Customer updated");
+            }
+            _log.LogInformation("Input validation failed");
+            return BadRequest("Input validation failed");
         }
     }
 }
