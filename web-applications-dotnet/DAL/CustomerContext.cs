@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using web_applications_dotnet.Models;
 
-namespace web_applications_dotnet.Models
+namespace web_applications_dotnet.DAL
 {
-    public class CustomerContext : DbContext
+    public sealed class CustomerContext : DbContext
     {
         public CustomerContext (DbContextOptions<CustomerContext> options) : base(options)
         {

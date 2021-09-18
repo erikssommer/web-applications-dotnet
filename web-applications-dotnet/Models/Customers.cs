@@ -6,6 +6,6 @@ namespace web_applications_dotnet.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Address { get; set; }
-        virtual public PostOffices PostOffice { get; set; }
+        public virtual PostOffices PostOffice { get; set; }
     }
 }

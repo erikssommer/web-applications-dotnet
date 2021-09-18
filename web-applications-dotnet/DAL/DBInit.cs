@@ -33,7 +33,7 @@ namespace web_applications_dotnet.DAL
             {
                 Username = "Admin"
             };
-            var password = "Test12";
+            const string password = "Test12";
             var salt = CustomerRepository.GenerateSalt();
             var hash = CustomerRepository.GenerateHash(password, salt);
             user.Password = hash;

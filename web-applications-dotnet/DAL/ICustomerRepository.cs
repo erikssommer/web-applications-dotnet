@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using web_applications_dotnet.Models;
 
-namespace web_applications_dotnet.Models
+namespace web_applications_dotnet.DAL
 {
     public interface ICustomerRepository
     {

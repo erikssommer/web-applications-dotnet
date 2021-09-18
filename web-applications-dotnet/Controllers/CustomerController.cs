@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using web_applications_dotnet.DAL;
 using web_applications_dotnet.Models;
 
 namespace web_applications_dotnet.Controllers
@@ -26,15 +23,12 @@ namespace web_applications_dotnet.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool ret = await _db.Save(customer);
+                var ret = await _db.Save(customer);
 
-                if (!ret)
-                {
-                    _log.LogInformation("Customer was not saved");
-                    return BadRequest("Customer was not saved");
-                }
+                if (ret) return Ok("Customer saved");
+                _log.LogInformation("Customer was not saved");
+                return BadRequest("Customer was not saved");
 
-                return Ok("Customer saved");
             }
             _log.LogInformation("Input validation failed");
             return BadRequest("Input validation failed");
@@ -43,49 +37,40 @@ namespace web_applications_dotnet.Controllers
 
         public async Task<ActionResult> GetAll()
         {
-            List<Customer> list = await _db.GetAll();
+            var list = await _db.GetAll();
             return Ok(list);
         }
 
         public async Task<ActionResult> Delete(int id)
         {
-            bool ret = await _db.Delete(id);
+            var ret = await _db.Delete(id);
 
-            if (!ret)
-            {
-                _log.LogInformation("Customer was not deleted");
-                return NotFound("Customer was not deleted");
-            }
+            if (ret) return Ok("Customer deleted");
+            _log.LogInformation("Customer was not deleted");
+            return NotFound("Customer was not deleted");
 
-            return Ok("Customer deleted");
         }
 
         public async Task<ActionResult> GetOne(int id)
         {
-            Customer customer = await _db.GetOne(id);
+            var customer = await _db.GetOne(id);
 
-            if (customer == null)
-            {
-                _log.LogInformation("Customer was not found");
-                return NotFound("Customer was not found");
-            }
+            if (customer != null) return Ok(customer);
+            _log.LogInformation("Customer was not found");
+            return NotFound("Customer was not found");
 
-            return Ok(customer);
         }
 
         public async Task<ActionResult> Update(Customer customer)
         {
             if (ModelState.IsValid)
             {
-                bool ret = await _db.Update(customer);
+                var ret = await _db.Update(customer);
 
-                if (!ret)
-                {
-                    _log.LogInformation("Customer was not found");
-                    return NotFound("Customer was not found");
-                }
+                if (ret) return Ok("Customer updated");
+                _log.LogInformation("Customer was not found");
+                return NotFound("Customer was not found");
 
-                return Ok("Customer updated");
             }
             _log.LogInformation("Input validation failed");
             return BadRequest("Input validation failed");
@@ -95,13 +80,10 @@ namespace web_applications_dotnet.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool ret = await _db.LogIn(user);
-                if (!ret)
-                {
-                    _log.LogInformation("Log in failed for user: "+user.Username);
-                    return Ok(false);
-                }
-                return Ok(true);
+                var ret = await _db.LogIn(user);
+                if (ret) return Ok(true);
+                _log.LogInformation("Log in failed for user: "+user.Username);
+                return Ok(false);
             }
             _log.LogInformation("Input validation failed");
             return BadRequest("Input validation failed on server");

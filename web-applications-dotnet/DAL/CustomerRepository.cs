@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using web_applications_dotnet.Models;
 
-namespace web_applications_dotnet.Models
+namespace web_applications_dotnet.DAL
 {
     public class CustomerRepository : ICustomerRepository
     {
@@ -24,10 +25,12 @@ namespace web_applications_dotnet.Models
         {
             try
             {
-                var newCustomerRow = new Customers();
-                newCustomerRow.FirstName = customer.FirstName;
-                newCustomerRow.LastName = customer.LastName;
-                newCustomerRow.Address = customer.Address;
+                var newCustomerRow = new Customers
+                {
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    Address = customer.Address
+                };
 
                 var testPostnr = await _db.PostOffices.FindAsync(customer.Postnr);
                 if (testPostnr == null)
@@ -56,7 +59,7 @@ namespace web_applications_dotnet.Models
         {
             try
             {
-                List<Customer> allCustomers = await _db.Customers.Select(k => new Customer
+                var allCustomers = await _db.Customers.Select(k => new Customer
                 {
                     Id = k.Id,
                     FirstName = k.FirstName,
@@ -77,7 +80,7 @@ namespace web_applications_dotnet.Models
         {
             try
             {
-                Customers customer = await _db.Customers.FindAsync(id);
+                var customer = await _db.Customers.FindAsync(id);
                 var dbCustomer = new Customer()
                 {
                     Id = customer.Id,
@@ -99,7 +102,7 @@ namespace web_applications_dotnet.Models
         {
             try
             {
-                Customers customer = await _db.Customers.FindAsync(id);
+                var customer = await _db.Customers.FindAsync(id);
                 _db.Customers.Remove(customer);
                 await _db.SaveChangesAsync();
                 return true;
@@ -148,15 +151,11 @@ namespace web_applications_dotnet.Models
         {
             try
             {
-                Users dbUser = await _db.Users.FirstOrDefaultAsync(b => b.Username == user.Username);
+                var dbUser = await _db.Users.FirstOrDefaultAsync(b => b.Username == user.Username);
                 // sjekk passordet
-                byte[] hash = GenerateHash(user.Password, dbUser.Salt);
-                bool ok = hash.SequenceEqual(dbUser.Password);
-                if (ok)
-                {
-                    return true;
-                }
-                return false;
+                var hash = GenerateHash(user.Password, dbUser.Salt);
+                var ok = hash.SequenceEqual(dbUser.Password);
+                return ok;
             }
             catch (Exception e)
             {

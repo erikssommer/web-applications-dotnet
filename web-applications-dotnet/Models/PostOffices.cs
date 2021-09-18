@@ -11,6 +11,6 @@ namespace web_applications_dotnet.Models
         public string Postnr { get; set; }
         public string PostOffice { get; set; }
         
-        virtual public List<Customers> Customers { get; set; }
+        public virtual List<Customers> Customers { get; set; }
     }
 }
