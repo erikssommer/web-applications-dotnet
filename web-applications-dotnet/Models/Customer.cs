@@ -9,7 +9,7 @@ namespace web_applications_dotnet.Models
         public string FirstName { get; set; }
         [RegularExpression(@"^[a-zA-ZæøåÆØÅ. \-]{2,20}$")]
         public string LastName { get; set; }
-        [RegularExpression(@"^[a-zA-ZæøåÆØÅ. \-]{2,20}$")]
+        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,50}")]
         public string Address { get; set; }
         [RegularExpression(@"^[0-9]{4}$")]
         public string Postnr { get; set; }
