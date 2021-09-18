@@ -10,7 +10,13 @@
         $("#adresse").val(customer.address);
         $("#postnr").val(customer.postnr);
         $("#poststed").val(customer.postOffice);
-    }).fail(() => $("#feil").html("Feil på server"));
+    }).fail(feil => {
+        if (feil.status === 401){
+            window.location.href = 'login.html';
+        }else{
+            $("#fail").html("Feil på server")
+        }
+    });
 });
 
 function validerOgEndreKunde() {
@@ -35,5 +41,11 @@ function endreKunde() {
     };
     $.post("Customer/Update", customer, () => {
         window.location.href = 'index.html';
-    }).fail(() => $("#fail").html("Feil på server"));
+    }).fail(feil => {
+        if (feil.status === 401){
+            window.location.href = 'login.html';
+        }else{
+            $("#fail").html("Feil på server")
+        }
+    });
 }

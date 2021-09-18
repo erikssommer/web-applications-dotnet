@@ -14,6 +14,8 @@ function login() {
             } else {
                 $("#feil").html("Feil brukernavn eller passord");
             }
-        }).fail(() => $("#feil").html("Feil på server - prøv igjen senere"));
+        }).fail(feil => {
+            $("#feil").html("Feil på server - prøv igjen senere: " + feil.responseText + " : " + feil.status + " : " + feil.statusText);
+        });
     }
 }

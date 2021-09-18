@@ -20,5 +20,11 @@ function lagreKunde() {
 
     $.post("Customer/Save", customer, () => {
         window.location.href = 'index.html';
-    }).fail(() => $("#feil").html("Feil på server"));
+    }).fail(feil => {
+        if (feil.status === 401){
+            window.location.href = 'login.html';
+        }else{
+            $("#fail").html("Feil på server")
+        }
+    });
 }

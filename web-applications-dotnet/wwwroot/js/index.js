@@ -5,7 +5,13 @@
 function hentAlleKunder() {
     $.get("Customer/GetAll", customers => {
         formaterKunder(customers);
-    }).fail(() => $("#feil").html("Feil på server"));
+    }).fail(feil => {
+        if (feil.status === 401){
+            window.location.href = 'login.html';
+        }else{
+            $("#fail").html("Feil på server")
+        }
+    });
 }
 
 function formaterKunder(customers) {
@@ -32,5 +38,11 @@ function slettKunde(id) {
 
     $.get("Customer/Delete?id=" + id, () => {
         window.location.href = 'index.html';
-    }).fail(() => $("#feil").html("Feil på server"));
+    }).fail(feil => {
+        if (feil.status === 401){
+            window.location.href = 'login.html';
+        }else{
+            $("#fail").html("Feil på server")
+        }
+    });
 }
