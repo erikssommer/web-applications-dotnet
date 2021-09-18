@@ -14,7 +14,7 @@ namespace web_applications_dotnet.Controllers
     {
         private readonly ICustomerRepository _db;
 
-        private ILogger<CustomerController> _log;
+        private readonly ILogger<CustomerController> _log;
 
         public CustomerController(ICustomerRepository db, ILogger<CustomerController> log)
         {
@@ -70,7 +70,7 @@ namespace web_applications_dotnet.Controllers
                 return NotFound("Customer was not found");
             }
 
-            return Ok("Customer found");
+            return Ok(customer);
         }
 
         public async Task<ActionResult> Update(Customer customer)
