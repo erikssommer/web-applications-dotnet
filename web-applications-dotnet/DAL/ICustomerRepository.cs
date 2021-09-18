@@ -10,5 +10,6 @@ namespace web_applications_dotnet.Models
         Task<bool> Delete(int id);
         Task<Customer> GetOne(int id);
         Task<bool> Update(Customer customer);
+        Task<bool> LogIn(User user);
     }
 }

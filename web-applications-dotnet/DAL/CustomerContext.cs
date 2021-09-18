@@ -14,6 +14,7 @@ namespace web_applications_dotnet.Models
         }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<PostOffices> PostOffices { get; set; }
+        public DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

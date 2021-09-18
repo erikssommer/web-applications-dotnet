@@ -1,17 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace web_applications_dotnet.Models
 {
     public class CustomerRepository : ICustomerRepository
     {
         private readonly CustomerContext _db;
+        private readonly ILogger<CustomerRepository> _log;
 
-        public CustomerRepository(CustomerContext db)
+        public CustomerRepository(CustomerContext db, ILogger<CustomerRepository> log)
         {
             _db = db;
+            _log = log;
         }
 
         public async Task<bool> Save(Customer customer)
@@ -136,6 +142,45 @@ namespace web_applications_dotnet.Models
             }
 
             return true;
+        }
+
+        public async Task<bool> LogIn(User user)
+        {
+            try
+            {
+                Users dbUser = await _db.Users.FirstOrDefaultAsync(b => b.Username == user.Username);
+                // sjekk passordet
+                byte[] hash = GenerateHash(user.Password, dbUser.Salt);
+                bool ok = hash.SequenceEqual(dbUser.Password);
+                if (ok)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                _log.LogInformation(e.Message);
+                return false;
+            }
+        }
+        
+        public static byte[] GenerateHash(string password, byte[] salt)
+        {
+            return KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA512,
+                iterationCount: 1000,
+                numBytesRequested: 32);
+        }
+
+        public static byte[] GenerateSalt()
+        {
+            var csp = new RNGCryptoServiceProvider();
+            var salt = new byte[24];
+            csp.GetBytes(salt);
+            return salt;
         }
     }
 }

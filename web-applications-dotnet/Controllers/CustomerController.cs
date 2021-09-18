@@ -90,5 +90,21 @@ namespace web_applications_dotnet.Controllers
             _log.LogInformation("Input validation failed");
             return BadRequest("Input validation failed");
         }
+        
+        public async Task<ActionResult> LogIn(User user) 
+        {
+            if (ModelState.IsValid)
+            {
+                bool ret = await _db.LogIn(user);
+                if (!ret)
+                {
+                    _log.LogInformation("Log in failed for user: "+user.Username);
+                    return Ok(false);
+                }
+                return Ok(true);
+            }
+            _log.LogInformation("Input validation failed");
+            return BadRequest("Input validation failed on server");
+        }
     }
 }

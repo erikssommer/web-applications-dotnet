@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using web_applications_dotnet.DAL;
 using web_applications_dotnet.Models;
 
 namespace web_applications_dotnet
@@ -31,7 +32,7 @@ namespace web_applications_dotnet
             {
                 app.UseDeveloperExceptionPage();
                 loggerFactory.AddFile("Logs/CustomerLog.txt");
-                DBInit.Initialize(app);
+                DbInit.Initialize(app);
             }
 
             app.UseRouting();
