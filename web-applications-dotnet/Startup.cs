@@ -23,6 +23,14 @@ namespace web_applications_dotnet
             services.AddControllers();
             services.AddDbContext<CustomerContext>(options => options.UseSqlite("Data source=Customer.db"));
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(1800); // 30min
+                options.Cookie.IsEssential = true;
+            });
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +44,10 @@ namespace web_applications_dotnet
             }
 
             app.UseRouting();
+
+            app.UseSession();
+
+            // app.UseAuthentication();
 
             app.UseStaticFiles();
 
