@@ -35,9 +35,11 @@ namespace web_applications_dotnet.DAL
                 var testPostnr = await _db.PostOffices.FindAsync(customer.Postnr);
                 if (testPostnr == null)
                 {
-                    var postOfficeRow = new PostOffices();
-                    postOfficeRow.Postnr = customer.Postnr;
-                    postOfficeRow.PostOffice = customer.PostOffice;
+                    var postOfficeRow = new PostOffices
+                    {
+                        Postnr = customer.Postnr,
+                        PostOffice = customer.PostOffice
+                    };
                     newCustomerRow.PostOffice = postOfficeRow;
                 }
                 else
@@ -120,12 +122,14 @@ namespace web_applications_dotnet.DAL
                 var updateObject = await _db.Customers.FindAsync(customer.Id);
                 if (updateObject.PostOffice.Postnr != customer.Postnr)
                 {
-                    var testPostnr = _db.PostOffices.Find(customer.Postnr);
+                    var testPostnr = await _db.PostOffices.FindAsync(customer.Postnr);
                     if (testPostnr == null)
                     {
-                        var postOfficeRow = new PostOffices();
-                        postOfficeRow.Postnr = customer.Postnr;
-                        postOfficeRow.PostOffice = customer.PostOffice;
+                        var postOfficeRow = new PostOffices
+                        {
+                            Postnr = customer.Postnr,
+                            PostOffice = customer.PostOffice
+                        };
                         updateObject.PostOffice = postOfficeRow;
                     }
                     else
