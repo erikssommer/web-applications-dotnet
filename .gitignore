@@ -35,5 +35,8 @@ msbuild.wrn
 
 # Rider IDEA
 
+web-applications-dotnet/bin
+web-applications-dotnet/obj
+
 *.idea
 web-applications-dotnet/Logs
