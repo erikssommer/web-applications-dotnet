@@ -40,3 +40,5 @@ web-applications-dotnet/obj
 
 *.idea
 web-applications-dotnet/Logs
+
+web-applications-dotnet/Customer.db
